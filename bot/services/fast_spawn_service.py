@@ -207,7 +207,7 @@ class RawSQLSpawnService:
                         # Create Pokemon entry
                         pokemon_id = f"poke_{int(datetime.utcnow().timestamp())}_{random.randint(1000, 9999)}"
                         await conn.execute("""
-                            INSERT INTO user_pokemon (pokemon_id, user_id, species, species_id, level, is_shiny, rarity, nature, ability, hp, attack, defense, special_attack, special_defense, speed, created_at)
+                            INSERT INTO pokemon (pokemon_id, owner_id, species, species_id, level, is_shiny, rarity, nature, ability, hp, attack, defense, special_attack, special_defense, speed, caught_at)
                             VALUES ($1, $2, $3, $4, $5, $6, $7, 'hardy', 'unknown', $8, $9, $10, $11, $12, $13, NOW())
                         """, pokemon_id, user_id, spawn['species'], spawn['species_id'], spawn['level'], spawn['is_shiny'], spawn['rarity'],
                         spawn['level'] * 3 + 50,  # HP
@@ -220,19 +220,22 @@ class RawSQLSpawnService:
                         
                         # Update user stats
                         exp_gained = spawn['level'] * 10
+                        coins_earned = spawn['level'] * 5 + (100 if spawn['is_shiny'] else 0)
                         await conn.execute("""
                             UPDATE users 
                             SET pokemon_caught = pokemon_caught + 1,
                                 total_pokemon = total_pokemon + 1,
-                                experience = experience + $2
+                                experience = experience + $2,
+                                coins = coins + $3
                             WHERE user_id = $1
-                        """, user_id, exp_gained)
+                        """, user_id, exp_gained, coins_earned)
                         
                         # Clear cache
                         if spawn['chat_id'] in self._spawn_cache:
                             del self._spawn_cache[spawn['chat_id']]
                         
-                        return True, f"Caught {spawn['species']}! (+{exp_gained} EXP)"
+                        bonus_text = f" (+{coins_earned} coins)" if coins_earned > 0 else ""
+                        return True, f"Caught {spawn['species']}! (+{exp_gained} EXP{bonus_text})"
                     else:
                         return False, f"{spawn['species']} escaped! Try again!"
                         
