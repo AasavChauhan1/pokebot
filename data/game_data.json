@@ -1,0 +1,131 @@
+{
+  "items": {
+    "pokeball": {
+      "name": "Poké Ball",
+      "description": "A standard ball for catching Pokémon",
+      "type": "pokeball",
+      "price": 200,
+      "catch_rate_bonus": 1.0
+    },
+    "great_ball": {
+      "name": "Great Ball",
+      "description": "A high-performance ball with better catch rate",
+      "type": "pokeball", 
+      "price": 600,
+      "catch_rate_bonus": 1.5
+    },
+    "ultra_ball": {
+      "name": "Ultra Ball",
+      "description": "An ultra-high performance ball",
+      "type": "pokeball",
+      "price": 1200,
+      "catch_rate_bonus": 2.0
+    },
+    "master_ball": {
+      "name": "Master Ball",
+      "description": "The ultimate ball that never fails",
+      "type": "pokeball",
+      "price": 10000,
+      "catch_rate_bonus": 999.0
+    },
+    "potion": {
+      "name": "Potion",
+      "description": "Restores 20 HP",
+      "type": "potion",
+      "price": 300,
+      "heal_amount": 20
+    },
+    "super_potion": {
+      "name": "Super Potion", 
+      "description": "Restores 50 HP",
+      "type": "potion",
+      "price": 700,
+      "heal_amount": 50
+    },
+    "hyper_potion": {
+      "name": "Hyper Potion",
+      "description": "Restores 200 HP", 
+      "type": "potion",
+      "price": 1200,
+      "heal_amount": 200
+    },
+    "rare_candy": {
+      "name": "Rare Candy",
+      "description": "Instantly raises a Pokémon's level by 1",
+      "type": "enhancement",
+      "price": 5000,
+      "level_boost": 1
+    },
+    "fire_stone": {
+      "name": "Fire Stone",
+      "description": "Evolution stone for certain Fire-type Pokémon",
+      "type": "evolution_stone",
+      "price": 3000
+    },
+    "water_stone": {
+      "name": "Water Stone", 
+      "description": "Evolution stone for certain Water-type Pokémon",
+      "type": "evolution_stone",
+      "price": 3000
+    },
+    "thunder_stone": {
+      "name": "Thunder Stone",
+      "description": "Evolution stone for certain Electric-type Pokémon", 
+      "type": "evolution_stone",
+      "price": 3000
+    },
+    "moon_stone": {
+      "name": "Moon Stone",
+      "description": "Evolution stone for certain Pokémon",
+      "type": "evolution_stone", 
+      "price": 3000
+    }
+  },
+  "natures": {
+    "hardy": {"name": "Hardy", "increased_stat": null, "decreased_stat": null},
+    "lonely": {"name": "Lonely", "increased_stat": "attack", "decreased_stat": "defense"},
+    "brave": {"name": "Brave", "increased_stat": "attack", "decreased_stat": "speed"},
+    "adamant": {"name": "Adamant", "increased_stat": "attack", "decreased_stat": "special_attack"},
+    "naughty": {"name": "Naughty", "increased_stat": "attack", "decreased_stat": "special_defense"},
+    "bold": {"name": "Bold", "increased_stat": "defense", "decreased_stat": "attack"},
+    "docile": {"name": "Docile", "increased_stat": null, "decreased_stat": null},
+    "relaxed": {"name": "Relaxed", "increased_stat": "defense", "decreased_stat": "speed"},
+    "impish": {"name": "Impish", "increased_stat": "defense", "decreased_stat": "special_attack"},
+    "lax": {"name": "Lax", "increased_stat": "defense", "decreased_stat": "special_defense"},
+    "timid": {"name": "Timid", "increased_stat": "speed", "decreased_stat": "attack"},
+    "hasty": {"name": "Hasty", "increased_stat": "speed", "decreased_stat": "defense"}, 
+    "serious": {"name": "Serious", "increased_stat": null, "decreased_stat": null},
+    "jolly": {"name": "Jolly", "increased_stat": "speed", "decreased_stat": "special_attack"},
+    "naive": {"name": "Naive", "increased_stat": "speed", "decreased_stat": "special_defense"},
+    "modest": {"name": "Modest", "increased_stat": "special_attack", "decreased_stat": "attack"},
+    "mild": {"name": "Mild", "increased_stat": "special_attack", "decreased_stat": "defense"},
+    "quiet": {"name": "Quiet", "increased_stat": "special_attack", "decreased_stat": "speed"},
+    "bashful": {"name": "Bashful", "increased_stat": null, "decreased_stat": null},
+    "rash": {"name": "Rash", "increased_stat": "special_attack", "decreased_stat": "special_defense"},
+    "calm": {"name": "Calm", "increased_stat": "special_defense", "decreased_stat": "attack"},
+    "gentle": {"name": "Gentle", "increased_stat": "special_defense", "decreased_stat": "defense"},
+    "sassy": {"name": "Sassy", "increased_stat": "special_defense", "decreased_stat": "speed"},
+    "careful": {"name": "Careful", "increased_stat": "special_defense", "decreased_stat": "special_attack"},
+    "quirky": {"name": "Quirky", "increased_stat": null, "decreased_stat": null}
+  },
+  "type_chart": {
+    "normal": {"weaknesses": ["fighting"], "resistances": [], "immunities": ["ghost"]},
+    "fire": {"weaknesses": ["water", "ground", "rock"], "resistances": ["fire", "grass", "ice", "bug", "steel", "fairy"]},
+    "water": {"weaknesses": ["electric", "grass"], "resistances": ["fire", "water", "ice", "steel"]},
+    "electric": {"weaknesses": ["ground"], "resistances": ["electric", "flying", "steel"]},
+    "grass": {"weaknesses": ["fire", "ice", "poison", "flying", "bug"], "resistances": ["water", "electric", "grass", "ground"]},
+    "ice": {"weaknesses": ["fire", "fighting", "rock", "steel"], "resistances": ["ice"]},
+    "fighting": {"weaknesses": ["flying", "psychic", "fairy"], "resistances": ["bug", "rock", "dark"]},
+    "poison": {"weaknesses": ["ground", "psychic"], "resistances": ["grass", "fighting", "poison", "bug", "fairy"]},
+    "ground": {"weaknesses": ["water", "grass", "ice"], "resistances": ["poison", "rock"], "immunities": ["electric"]},
+    "flying": {"weaknesses": ["electric", "ice", "rock"], "resistances": ["grass", "fighting", "bug"], "immunities": ["ground"]},
+    "psychic": {"weaknesses": ["bug", "ghost", "dark"], "resistances": ["fighting", "psychic"]},
+    "bug": {"weaknesses": ["fire", "flying", "rock"], "resistances": ["grass", "fighting", "ground"]},
+    "rock": {"weaknesses": ["water", "grass", "fighting", "ground", "steel"], "resistances": ["normal", "fire", "poison", "flying"]},
+    "ghost": {"weaknesses": ["ghost", "dark"], "resistances": ["poison", "bug"], "immunities": ["normal", "fighting"]},
+    "dragon": {"weaknesses": ["ice", "dragon", "fairy"], "resistances": ["fire", "water", "electric", "grass"]},
+    "dark": {"weaknesses": ["fighting", "bug", "fairy"], "resistances": ["ghost", "dark"], "immunities": ["psychic"]},
+    "steel": {"weaknesses": ["fire", "fighting", "ground"], "resistances": ["normal", "grass", "ice", "flying", "psychic", "bug", "rock", "dragon", "steel", "fairy"], "immunities": ["poison"]},
+    "fairy": {"weaknesses": ["poison", "steel"], "resistances": ["fighting", "bug", "dark"], "immunities": ["dragon"]}
+  }
+}

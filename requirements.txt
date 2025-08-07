@@ -1,0 +1,40 @@
+# Core Telegram Bot
+python-telegram-bot==20.8
+aiogram==3.4.1
+
+# Database
+asyncpg==0.29.0
+sqlalchemy==2.0.25
+alembic==1.13.1
+
+# HTTP Requests
+aiohttp==3.9.1
+requests==2.31.0
+
+# Environment Management
+python-decouple==3.8
+
+# Image Processing
+Pillow==10.2.0
+
+# Async Support
+asyncio-throttle==1.0.2
+
+# Logging
+structlog==23.2.0
+
+# Data Validation
+pydantic==2.5.3
+
+# Scheduling
+APScheduler==3.10.4
+
+# Caching (We'll use PostgreSQL for everything)
+# redis==5.0.1
+
+# Utils
+python-dateutil==2.8.2
+
+# Development and Testing
+pytest==7.4.4
+pytest-asyncio==0.23.2

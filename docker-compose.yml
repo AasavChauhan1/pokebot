@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # MongoDB database
+  mongodb:
+    image: mongo:7.0
+    container_name: pokebot-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: pokebot
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - pokebot-network
+
+  # Redis cache
+  redis:
+    image: redis:7-alpine
+    container_name: pokebot-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - pokebot-network
+
+  # PokéBot application
+  pokebot:
+    build: .
+    container_name: pokebot-app
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      MONGODB_URL: mongodb://admin:password123@mongodb:27017/pokebot?authSource=admin
+      REDIS_URL: redis://redis:6379
+      DEBUG: ${DEBUG:-False}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      ADMIN_IDS: ${ADMIN_IDS}
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - pokebot-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import asyncio; print('healthy')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  pokebot-network:
+    driver: bridge
