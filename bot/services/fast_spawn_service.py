@@ -39,14 +39,33 @@ class RawSQLSpawnService:
                 if existing:
                     return False  # Already has spawn
                 
-                # Fast Pokemon generation
-                species_name = random.choice(self._pokemon_names)
-                species_id = random.randint(1, 800)
-                level = random.randint(1, 50)
-                is_shiny = random.random() < 0.005  # 0.5% chance
-                rarity = 'legendary' if is_shiny else random.choice(['common', 'uncommon', 'rare'])
+                # Clear any old cache first
+                if chat_id in self._spawn_cache:
+                    del self._spawn_cache[chat_id]
                 
-                spawn_id = f"spawn_{int(datetime.utcnow().timestamp())}_{random.randint(1000, 9999)}"
+                # Get truly random Pokemon
+                species_name, species_id, level = self.get_random_pokemon()
+                
+                # Random attributes
+                is_shiny = random.random() < 0.005  # 0.5% chance
+                
+                # Better rarity distribution
+                if is_shiny:
+                    rarity = 'legendary'
+                else:
+                    rarity_roll = random.random()
+                    if rarity_roll < 0.6:
+                        rarity = 'common'
+                    elif rarity_roll < 0.85:
+                        rarity = 'uncommon'
+                    elif rarity_roll < 0.95:
+                        rarity = 'rare'
+                    else:
+                        rarity = 'epic'
+                
+                # Unique spawn ID with more randomness
+                import time
+                spawn_id = f"spawn_{int(time.time() * 1000)}_{random.randint(10000, 99999)}_{chat_id}"
                 expires_at = datetime.utcnow() + timedelta(minutes=10)
                 
                 # Direct insert - no ORM overhead
@@ -55,16 +74,18 @@ class RawSQLSpawnService:
                     VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), $8, false)
                 """, spawn_id, chat_id, species_name, species_id, level, is_shiny, rarity, expires_at)
                 
-                # Cache for quick access
+                # Cache for quick access (with species_id for image fetching)
                 self._spawn_cache[chat_id] = {
                     'spawn_id': spawn_id,
                     'species': species_name,
+                    'species_id': species_id,
                     'level': level,
                     'is_shiny': is_shiny,
-                    'rarity': rarity
+                    'rarity': rarity,
+                    'spawned_at': datetime.utcnow()
                 }
                 
-                logger.info(f"FAST SPAWN: {species_name} (lvl {level}) in chat {chat_id}")
+                logger.info(f"FAST SPAWN: {species_name} (lvl {level}, ID: {species_id}) in chat {chat_id}")
                 return True
                 
         except Exception as e:
@@ -251,11 +272,44 @@ class RawSQLSpawnService:
                     DELETE FROM spawns 
                     WHERE expires_at < NOW() AND is_caught = false
                 """)
-                # Clear cache for expired spawns
-                self._spawn_cache.clear()
+                # Clear cache for expired spawns  
+                current_time = datetime.utcnow()
+                expired_chats = []
+                for chat_id, spawn_data in self._spawn_cache.items():
+                    if 'spawned_at' in spawn_data:
+                        if current_time - spawn_data['spawned_at'] > timedelta(minutes=10):
+                            expired_chats.append(chat_id)
+                
+                for chat_id in expired_chats:
+                    del self._spawn_cache[chat_id]
+                    
                 return int(result.split()[-1]) if result else 0
         except:
             return 0
+    
+    def clear_spawn_cache(self, chat_id: int = None):
+        """Manually clear spawn cache."""
+        if chat_id:
+            if chat_id in self._spawn_cache:
+                del self._spawn_cache[chat_id]
+        else:
+            self._spawn_cache.clear()
+    
+    def get_random_pokemon(self):
+        """Get a random Pokemon with improved randomization."""
+        import time
+        import hashlib
+        
+        # Create a truly random seed using current time and system entropy
+        seed_string = f"{time.time()}_{random.random()}_{id(self)}"
+        seed_hash = int(hashlib.md5(seed_string.encode()).hexdigest()[:8], 16)
+        random.seed(seed_hash)
+        
+        species_name = random.choice(self._pokemon_names)
+        species_id = random.randint(1, 800)
+        level = random.randint(1, 50)
+        
+        return species_name, species_id, level
 
 
 # Global service
